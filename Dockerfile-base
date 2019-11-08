@@ -20,6 +20,7 @@ RUN apk add --no-cache python3 nss libc6-compat bash; \
 COPY wait-for-step.sh /
 COPY execute-step.sh /
 COPY finish-step.sh /
+COPY metrics.properties /opt/spark/conf/metrics.properties
 
 #Give permission to execute scripts
 RUN chmod +x /wait-for-step.sh && chmod +x /execute-step.sh && chmod +x /finish-step.sh
