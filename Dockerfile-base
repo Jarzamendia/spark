@@ -3,6 +3,7 @@ FROM jarzamendia/oracle-jre:latest
 ENV ENABLE_INIT_DAEMON true
 ENV INIT_DAEMON_BASE_URI http://identifier/init-daemon
 ENV INIT_DAEMON_STEP spark_master_init
+ENV SPARK_HOME="/opt/spark"
 
 EXPOSE 18080 8080 8081 7077 6066 4040
 
@@ -16,7 +17,7 @@ RUN apk add --no-cache python3 nss libc6-compat bash; && \
   curl https://bootstrap.pypa.io/get-pip.py | python3; && \
   ln -sv /usr/bin/python3 /usr/bin/python; \
   && cd /css; \
-  && jar uf /spark/jars/spark-core_2.11-${SPARK_VERSION}.jar org/apache/spark/ui/static/timeline-view.css; \
+  && jar uf /spark/jars/spark-core_2.11-${SPARK_VERSION}.jar org/apache/spark/ui/static/timeline-view.css;
 
 COPY wait-for-step.sh /
 COPY execute-step.sh /
@@ -26,5 +27,5 @@ COPY finish-step.sh /
 RUN chmod +x /wait-for-step.sh && chmod +x /execute-step.sh && chmod +x /finish-step.sh
 
 ENV PYTHONHASHSEED 1
-ENV SPARK_HOME="/opt/spark"
+
 ENV PATH="$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin"
