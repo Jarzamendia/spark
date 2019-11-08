@@ -13,11 +13,9 @@ COPY bde-spark.css /css/org/apache/spark/ui/static/timeline-view.css
 
 RUN curl -Ls "http://ftp.unicamp.br/pub/apache/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz" | tar zxvf - -C "$SPARK_HOME" --strip=1
 
-RUN apk add --no-cache python3 nss libc6-compat bash; && \
-  curl https://bootstrap.pypa.io/get-pip.py | python3; && \
-  ln -sv /usr/bin/python3 /usr/bin/python; \
-  && cd /css; \
-  && jar uf /spark/jars/spark-core_2.11-${SPARK_VERSION}.jar org/apache/spark/ui/static/timeline-view.css;
+RUN apk add --no-cache python3 nss libc6-compat bash; \
+    curl https://bootstrap.pypa.io/get-pip.py | python3;  \
+    ln -sv /usr/bin/python3 /usr/bin/python;
 
 COPY wait-for-step.sh /
 COPY execute-step.sh /
