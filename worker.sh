@@ -2,7 +2,7 @@
 
 . "/spark/sbin/spark-config.sh"
 
-. "/spark/bin/load-spark-env.sh"
+#. "/spark/bin/load-spark-env.sh"
 
 mkdir -p $SPARK_WORKER_LOG
 
