@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   spark-master:
-    image: jarzamendia/spark-master:latest
+    image: jarzamendia/spark-master:staging
     ports:
       - "8080:8080"
       - "7077:7077"
@@ -17,7 +17,7 @@ services:
 
   spark-worker:
     hostname: "{{.Node.Hostname}}"
-    image: jarzamendia/spark-worker:latest
+    image: jarzamendia/spark-worker:staging
     ports:
       - "8081:8081"
     environment:

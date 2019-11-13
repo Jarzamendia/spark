@@ -9,8 +9,6 @@ EXPOSE 18080 8080 8081 7077 6066 4040
 
 WORKDIR "$SPARK_HOME"
 
-COPY bde-spark.css /css/org/apache/spark/ui/static/timeline-view.css
-
 RUN curl -Ls "http://ftp.unicamp.br/pub/apache/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz" | tar zxvf - -C "$SPARK_HOME" --strip=1
 
 RUN apk add --no-cache python3 nss libc6-compat bash; \
@@ -20,7 +18,6 @@ RUN apk add --no-cache python3 nss libc6-compat bash; \
 COPY wait-for-step.sh /
 COPY execute-step.sh /
 COPY finish-step.sh /
-COPY metrics.properties /opt/spark/conf/metrics.properties
 
 #Give permission to execute scripts
 RUN chmod +x /wait-for-step.sh && chmod +x /execute-step.sh && chmod +x /finish-step.sh
