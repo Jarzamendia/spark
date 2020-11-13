@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+
+  spark-master:
+    image: jarzamendia/spark-master:staging
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    networks:
+      spark-network:
+    environment:
+      - INIT_DAEMON_STEP=setup_spark
+      - SPARK_PUBLIC_DNS=spark.ms.gov.br
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_DAEMON_JAVA_OPTS=-Dspark.metrics.conf=/opt/spark/conf/metrics.properties
+          deploy:
+      mode: global
+      placement:
+        constraints:
+          - "node.role==manager"
+     
+  spark-worker:
+    hostname: "{{.Node.Hostname}}"
+    image: jarzamendia/spark-worker:staging
+    ports:
+      - "8081:8081"
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_DRIVER_MEMORY=128m
+      - SPARK_EXECUTOR_MEMORY=256m
+      - SPARK_PUBLIC_DNS={{.Node.Hostname}}-worker.spark.ms.gov.br
+      - SPARK_DAEMON_JAVA_OPTS=-Dspark.metrics.conf=/opt/spark/conf/metrics.properties 
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - "node.role==worker"
+    networks: 
+      spark-network:
+
+networks:
+  spark-network:

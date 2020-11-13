@@ -4,9 +4,9 @@
 
 ## Introdução
 
-Spark para Docker Swarm. Em breve irei criar algumas aplicações para teste. Meu objetivo principal é fazer testes de performance com varias configurações e topologias.
+Spark para Docker Swarm. Em breve irei criar algumas aplicações para teste. Meu objetivo principal é fazer testes de performance com várias configurações e topologias.
 
-## Images
+## Imagens
 
 [Master](https://hub.docker.com/r/jarzamendia/spark-master)
 [Worker](https://hub.docker.com/r/jarzamendia/spark-worker)
@@ -17,7 +17,9 @@ Spark para Docker Swarm. Em breve irei criar algumas aplicações para teste. Me
 [Worker](Dockerfile-worker)
 [Master](Dockerfile-master)
 
-## Docker-Compose
+## Arquivos de implantação
+
+Outros exemplos no diretório docker, incluindo modo HA com Zookeper.
 
 ```
 version: "3.7"
@@ -35,10 +37,15 @@ services:
       - INIT_DAEMON_STEP=setup_spark
       - SPARK_PUBLIC_DNS=spark.local
       - SPARK_MASTER_HOST=spark-master
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - "node.role==manager"
 
   spark-worker:
-    hostname: "{{.Node.Hostname}}"
     image: jarzamendia/spark-worker:staging
+    hostname: "{{.Node.Hostname}}"
     ports:
       - "8081:8081"
     environment:
@@ -50,13 +57,22 @@ services:
       - SPARK_PUBLIC_DNS={{.Node.Hostname}}-worker.spark.local
       - SPARK_DAEMON_JAVA_OPTS=-Dspark.metrics.conf=/opt/spark/conf/metrics.properties 
     deploy:
-      mode: replicated
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - "node.role==worker"
     networks: 
       spark-network:
 
 networks:
   spark-network:
-    external: true
 
 ```
+
+## Exemplos
+
+Em todos os containers do Spark, na pasta /opt/spark/examples temos exemplos de várias linguagens disponíveis. Podemos por executar um deles usando o Spark-Submit. Para facilitar os testes, acesse o container de um Master e execute o seguinte comando: 
+```
+spark-submit --master spark://spark-master:7077 /opt/spark/examples/src/main/python/pi.py 1000
+```
+Tente alterar o valor no final do script e o número de Workers disponíveis.
