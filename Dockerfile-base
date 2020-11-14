@@ -12,7 +12,7 @@ EXPOSE 18080 8080 8081 7077 6066 4040
 WORKDIR "$SPARK_HOME"
 
 RUN curl -Ls "http://ftp.unicamp.br/pub/apache/spark/spark-$SPARK_VERSION/spark-2.4.7-bin-hadoop$HADOOP_VERSION.tgz" | tar zxvf - -C "$SPARK_HOME" --strip=1 && \
-    apk add --no-cache python3 nss libc6-compat bash && \
+    apk add --no-cache python3 nss bash && \
     curl https://bootstrap.pypa.io/get-pip.py | python3 && \
     ln -sv /usr/bin/python3 /usr/bin/python
 
