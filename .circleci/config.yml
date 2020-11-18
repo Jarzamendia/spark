@@ -53,28 +53,25 @@ jobs:
       - run:
           name: Build Docker image Base
           command: |
+            IMAGE_TAG=spark3.0.1-hadoop3.2
             docker build -t $IMAGE_NAME-base:$IMAGE_TAG -f v3/Dockerfile-base .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=spark3.0.1-hadoop3.2
-            docker tag $IMAGE_NAME-base:latest $IMAGE_NAME-base:$IMAGE_TAG
             docker push $IMAGE_NAME-base:$IMAGE_TAG
 
       - run:
           name: Build Docker image Master
           command: |
+            IMAGE_TAG=spark3.0.1-hadoop3.2
             docker build -t $IMAGE_NAME-master:$IMAGE_TAG -f v2/Dockerfile-master .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=spark3.0.1-hadoop3.2
-            docker tag $IMAGE_NAME-master:$IMAGE_TAG $IMAGE_NAME-master:$IMAGE_TAG
             docker push $IMAGE_NAME-master:$IMAGE_TAG
 
       - run:
           name: Build Docker image Worker
           command: |
+            IMAGE_TAG=spark3.0.1-hadoop3.2
             docker build -t $IMAGE_NAME-worker:$IMAGE_TAG -f v2/Dockerfile-worker .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=spark3.0.1-hadoop3.2
-            docker tag $IMAGE_NAME-worker:$IMAGE_TAG $IMAGE_NAME-worker:$IMAGE_TAG
             docker push $IMAGE_NAME-worker:$IMAGE_TAG
 
 workflows:
