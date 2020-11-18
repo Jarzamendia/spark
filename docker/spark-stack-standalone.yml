@@ -21,7 +21,6 @@ services:
           - "node.role==manager"
      
   spark-worker:
-    hostname: "{{.Node.Hostname}}"
     image: jarzamendia/spark-worker:staging
     ports:
       - "8081:8081"

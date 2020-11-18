@@ -1,6 +1,6 @@
 FROM jarzamendia/spark-base:spark2.4.7-hadoop2.7
 
-COPY master.sh /
+COPY v2/master.sh /
 
 ENV SPARK_MASTER_PORT 7077
 ENV SPARK_MASTER_WEBUI_PORT 8080

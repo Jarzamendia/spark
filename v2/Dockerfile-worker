@@ -1,6 +1,6 @@
 FROM jarzamendia/spark-base:spark2.4.7-hadoop2.7
 
-COPY worker.sh /
+COPY v2/worker.sh /
 
 ENV SPARK_WORKER_WEBUI_PORT 8081
 ENV SPARK_WORKER_LOG /spark/logs
