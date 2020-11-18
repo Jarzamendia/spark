@@ -10,7 +10,7 @@ executors:
 
 jobs:
 
-  build:
+  build-v2:
     executor: docker-publisher
     steps:
       - checkout
@@ -19,116 +19,28 @@ jobs:
           name: Build Docker image Base
           command: |
             docker build -t $IMAGE_NAME-base:latest -f v2/Dockerfile-base .
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            IMAGE_TAG=2.4.7-hadoop2.7
+            docker tag $IMAGE_NAME-base:latest $IMAGE_NAME-base:$IMAGE_TAG
+            docker push $IMAGE_NAME-base:latest
+            docker push $IMAGE_NAME-base:$IMAGE_TAG
+
       - run:
           name: Build Docker image Master
           command: |
             docker build -t $IMAGE_NAME-master:latest -f v2/Dockerfile-master .
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            IMAGE_TAG=2.4.7-hadoop2.7
+            docker tag $IMAGE_NAME-master:latest $IMAGE_NAME-master:$IMAGE_TAG
+            docker push $IMAGE_NAME-master:latest
+            docker push $IMAGE_NAME-master:$IMAGE_TAG
+
       - run:
           name: Build Docker image Worker
           command: |
             docker build -t $IMAGE_NAME-worker:latest -f v2/Dockerfile-worker .
-
-      - run:
-          name: Archive Docker image Base
-          command: docker save -o image-base.tar $IMAGE_NAME-base
-      - run:
-          name: Archive Docker image Master
-          command: docker save -o image-master.tar $IMAGE_NAME-master
-      - run:
-          name: Archive Docker image Worker
-          command: docker save -o image-worker.tar $IMAGE_NAME-worker
-
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./image-base.tar
-            - ./image-master.tar
-            - ./image-worker.tar
-
-  publish-latest:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-
-      - run:
-          name: Load archived Docker image Base
-          command: docker load -i /tmp/workspace/image-base.tar
-      - run:
-          name: Load archived Docker image Master
-          command: docker load -i /tmp/workspace/image-master.tar
-      - run:
-          name: Load archived Docker image Worker
-          command: docker load -i /tmp/workspace/image-worker.tar
-
-      - run:
-          name: Publish Docker Image to Docker Hub Base
-          command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}"
-            docker tag $IMAGE_NAME-base:latest $IMAGE_NAME-base:$IMAGE_TAG
-            docker push $IMAGE_NAME-base:latest
-            docker push $IMAGE_NAME-base:$IMAGE_TAG
-      - run:
-          name: Publish Docker Image to Docker Hub Master
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}"
-            docker tag $IMAGE_NAME-master:latest $IMAGE_NAME-master:$IMAGE_TAG
-            docker push $IMAGE_NAME-master:latest
-            docker push $IMAGE_NAME-master:$IMAGE_TAG
-      - run:
-          name: Publish Docker Image to Docker Hub Worker
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}"
-            docker tag $IMAGE_NAME-worker:latest $IMAGE_NAME-worker:$IMAGE_TAG
-            docker push $IMAGE_NAME-worker:latest
-            docker push $IMAGE_NAME-worker:$IMAGE_TAG
-
-  publish-tag:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-
-      - run:
-          name: Load archived Docker image Base
-          command: docker load -i /tmp/workspace/image-base.tar
-
-      - run:
-          name: Load archived Docker image Master
-          command: docker load -i /tmp/workspace/image-master.tar
-
-      - run:
-          name: Load archived Docker image Worker
-          command: docker load -i /tmp/workspace/image-worker.tar
-
-      - run:
-          name: Publish Docker Image to Docker Hub Base
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=${CIRCLE_TAG/v/''}
-            docker tag $IMAGE_NAME-base:latest $IMAGE_NAME-base:$IMAGE_TAG
-            docker push $IMAGE_NAME-base:latest
-            docker push $IMAGE_NAME-base:$IMAGE_TAG
-
-      - run:
-          name: Publish Docker Image to Docker Hub Master
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=${CIRCLE_TAG/v/''}
-            docker tag $IMAGE_NAME-master:latest $IMAGE_NAME-master:$IMAGE_TAG
-            docker push $IMAGE_NAME-master:latest
-            docker push $IMAGE_NAME-master:$IMAGE_TAG
-
-      - run:
-          name: Publish Docker Image to Docker Hub Worker
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=${CIRCLE_TAG/v/''}
+            IMAGE_TAG=$2.4.7-hadoop2.7
             docker tag $IMAGE_NAME-worker:latest $IMAGE_NAME-worker:$IMAGE_TAG
             docker push $IMAGE_NAME-worker:latest
             docker push $IMAGE_NAME-worker:$IMAGE_TAG
@@ -139,30 +51,7 @@ workflows:
 
   build-master:
     jobs:
-      - build:
+      - build-v2:
           filters:
             branches:
               only: master
-      - publish-latest:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
-
-  build-tags:
-    jobs:
-      - build:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - publish-tag:
-          requires:
-            - build
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
