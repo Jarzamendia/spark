@@ -62,7 +62,7 @@ jobs:
           name: Build Docker image Master
           command: |
             IMAGE_TAG=spark3.0.1-hadoop3.2
-            docker build -t $IMAGE_NAME-master:$IMAGE_TAG -f v2/Dockerfile-master .
+            docker build -t $IMAGE_NAME-master:$IMAGE_TAG -f v3/Dockerfile-master .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME-master:$IMAGE_TAG
 
@@ -70,7 +70,7 @@ jobs:
           name: Build Docker image Worker
           command: |
             IMAGE_TAG=spark3.0.1-hadoop3.2
-            docker build -t $IMAGE_NAME-worker:$IMAGE_TAG -f v2/Dockerfile-worker .
+            docker build -t $IMAGE_NAME-worker:$IMAGE_TAG -f v3/Dockerfile-worker .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME-worker:$IMAGE_TAG
 

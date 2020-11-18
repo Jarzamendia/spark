@@ -1,0 +1,60 @@
+version: "3.7"
+
+services:
+
+  spark-master:
+    image: jarzamendia/spark-master:spark3.0.1-hadoop3.2
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+      - "4040:4040"
+    networks:
+      spark-network:
+    environment:
+      - INIT_DAEMON_STEP=setup_spark
+      - SPARK_PUBLIC_DNS=10.1.7.110
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_DAEMON_JAVA_OPTS=-Dspark.metrics.conf=/opt/spark/conf/metrics.properties
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - "node.role==manager"
+
+  spark-worker:
+    image: jarzamendia/spark-worker:spark3.0.1-hadoop3.2
+    ports:
+      - "8081:8081"
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_CORES=4
+      - SPARK_WORKER_MEMORY=4G
+      - SPARK_DRIVER_MEMORY=512m
+      - SPARK_EXECUTOR_MEMORY=1024m
+      - SPARK_PUBLIC_DNS={{.Node.Hostname}}
+      - SPARK_DAEMON_JAVA_OPTS=-Dspark.metrics.conf=/opt/spark/conf/metrics.properties
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - "node.role==worker"
+    networks:
+      spark-network:
+
+  spark-jupyter:
+    restart: always
+    image: jupyter/pyspark-notebook:42f4c82a07ff
+    ports:
+      - "8888:8888"
+    volumes:
+      - /spark:/tmp/bolsa
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - "node.role==manager"
+    networks:
+      spark-network:
+
+networks:
+  spark-network:
