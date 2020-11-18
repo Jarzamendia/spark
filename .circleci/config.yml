@@ -18,15 +18,15 @@ jobs:
       - run:
           name: Build Docker image Base
           command: |
-            docker build -t $IMAGE_NAME-base:latest -f Dockerfile-base .
+            docker build -t $IMAGE_NAME-base:latest -f v2/Dockerfile-base .
       - run:
           name: Build Docker image Master
           command: |
-            docker build -t $IMAGE_NAME-master:latest -f Dockerfile-master .
+            docker build -t $IMAGE_NAME-master:latest -f v2/Dockerfile-master .
       - run:
           name: Build Docker image Worker
           command: |
-            docker build -t $IMAGE_NAME-worker:latest -f Dockerfile-worker .
+            docker build -t $IMAGE_NAME-worker:latest -f v2/Dockerfile-worker .
 
       - run:
           name: Archive Docker image Base

@@ -11,7 +11,7 @@ services:
       spark-network:
     environment:
       - INIT_DAEMON_STEP=setup_spark
-      - SPARK_PUBLIC_DNS=spark.ms.gov.br
+      - SPARK_PUBLIC_DNS=spark.local
       - SPARK_MASTER_HOST=spark-master
       - SPARK_DAEMON_JAVA_OPTS=-Dspark.metrics.conf=/opt/spark/conf/metrics.properties
           deploy:
@@ -31,7 +31,7 @@ services:
       - SPARK_WORKER_MEMORY=1G
       - SPARK_DRIVER_MEMORY=128m
       - SPARK_EXECUTOR_MEMORY=256m
-      - SPARK_PUBLIC_DNS={{.Node.Hostname}}-worker.spark.ms.gov.br
+      - SPARK_PUBLIC_DNS={{.Node.Hostname}}-worker.local
       - SPARK_DAEMON_JAVA_OPTS=-Dspark.metrics.conf=/opt/spark/conf/metrics.properties 
     deploy:
       mode: global

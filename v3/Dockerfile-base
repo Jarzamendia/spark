@@ -1,0 +1,31 @@
+FROM jarzamendia/oracle-jre:latest
+
+ENV ENABLE_INIT_DAEMON true
+ENV INIT_DAEMON_BASE_URI http://identifier/init-daemon
+ENV INIT_DAEMON_STEP spark_master_init
+ENV SPARK_HOME="/opt/spark"
+ENV SPARK_VERSION=3.0.1
+ENV HADOOP_VERSION=3.2
+
+EXPOSE 18080 8080 8081 7077 6066 4040
+
+WORKDIR "$SPARK_HOME"
+
+RUN curl -Ls "http://ftp.unicamp.br/pub/apache/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz" | tar zxvf - -C "$SPARK_HOME" --strip=1 && \
+    apk add --no-cache python3 nss bash && \
+    curl https://bootstrap.pypa.io/get-pip.py | python3 && \
+    ln -sv /usr/bin/python3 /usr/bin/python
+
+COPY wait-for-step.sh /
+COPY execute-step.sh /
+COPY finish-step.sh /
+
+RUN mv /opt/spark/conf/log4j.properties.template /opt/spark/conf/log4j.properties
+RUN mv /opt/spark/conf/metrics.properties.template /opt/spark/conf/metrics.properties
+
+#Give permission to execute scripts
+RUN chmod +x /wait-for-step.sh && chmod +x /execute-step.sh && chmod +x /finish-step.sh
+
+ENV PYTHONHASHSEED 1
+
+ENV PATH="$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin"
