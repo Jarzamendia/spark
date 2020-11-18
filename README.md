@@ -13,9 +13,12 @@ Spark para Docker Swarm. Em breve irei criar algumas aplicações para teste. Me
 
 ## Dockerfiles
 
-[Base](Dockerfile-base)
-[Worker](Dockerfile-worker)
-[Master](Dockerfile-master)
+[Base](v2/Dockerfile-base)
+[Worker](v2/Dockerfile-worker)
+[Master](v2/Dockerfile-master)
+
+## Versões
+Estão disponíveis as versões spark2.4.7-hadoop2.7 e spark3.0.1-hadoop3.2. É importante manter as versões sincronizadas entre executores, como por exemplo o Jupyter Lab.
 
 ## Arquivos de implantação
 
@@ -27,7 +30,7 @@ version: "3.7"
 services:
 
   spark-master:
-    image: jarzamendia/spark-master:staging
+    image: jarzamendia/spark-master:spark2.4.7-hadoop2.7
     ports:
       - "8080:8080"
       - "7077:7077"
@@ -44,7 +47,7 @@ services:
           - "node.role==manager"
 
   spark-worker:
-    image: jarzamendia/spark-worker:staging
+    image: jarzamendia/spark-worker:spark2.4.7-hadoop2.7
     hostname: "{{.Node.Hostname}}"
     ports:
       - "8081:8081"
