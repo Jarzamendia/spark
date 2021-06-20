@@ -20,7 +20,7 @@ jobs:
           command: |
             docker build -t $IMAGE_NAME-base:latest -f v2/Dockerfile-base .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=spark2.4.7-hadoop2.7
+            IMAGE_TAG=spark2.4.8-hadoop2.7
             docker tag $IMAGE_NAME-base:latest $IMAGE_NAME-base:$IMAGE_TAG
             docker push $IMAGE_NAME-base:latest
             docker push $IMAGE_NAME-base:$IMAGE_TAG
@@ -30,7 +30,7 @@ jobs:
           command: |
             docker build -t $IMAGE_NAME-master:latest -f v2/Dockerfile-master .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=spark2.4.7-hadoop2.7
+            IMAGE_TAG=spark2.4.8-hadoop2.7
             docker tag $IMAGE_NAME-master:latest $IMAGE_NAME-master:$IMAGE_TAG
             docker push $IMAGE_NAME-master:latest
             docker push $IMAGE_NAME-master:$IMAGE_TAG
@@ -40,7 +40,7 @@ jobs:
           command: |
             docker build -t $IMAGE_NAME-worker:latest -f v2/Dockerfile-worker .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=spark2.4.7-hadoop2.7
+            IMAGE_TAG=spark2.4.8-hadoop2.7
             docker tag $IMAGE_NAME-worker:latest $IMAGE_NAME-worker:$IMAGE_TAG
             docker push $IMAGE_NAME-worker:latest
             docker push $IMAGE_NAME-worker:$IMAGE_TAG
