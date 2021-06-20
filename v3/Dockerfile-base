@@ -16,9 +16,9 @@ RUN curl -Ls "http://ftp.unicamp.br/pub/apache/spark/spark-$SPARK_VERSION/spark-
     curl https://bootstrap.pypa.io/get-pip.py | python3 && \
     ln -sv /usr/bin/python3 /usr/bin/python
 
-COPY wait-for-step.sh /
-COPY execute-step.sh /
-COPY finish-step.sh /
+COPY v3/wait-for-step.sh /
+COPY v3/execute-step.sh /
+COPY v3/finish-step.sh /
 
 RUN mv /opt/spark/conf/log4j.properties.template /opt/spark/conf/log4j.properties
 RUN mv /opt/spark/conf/metrics.properties.template /opt/spark/conf/metrics.properties

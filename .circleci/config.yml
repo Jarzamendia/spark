@@ -18,7 +18,6 @@ jobs:
       - run:
           name: Build Docker image Base
           command: |
-            cd v2
             docker build -t $IMAGE_NAME-base:latest -f v2/Dockerfile-base .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             IMAGE_TAG=spark2.4.7-hadoop2.7
@@ -29,7 +28,6 @@ jobs:
       - run:
           name: Build Docker image Master
           command: |
-            cd v2
             docker build -t $IMAGE_NAME-master:latest -f v2/Dockerfile-master .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             IMAGE_TAG=spark2.4.7-hadoop2.7
@@ -40,7 +38,6 @@ jobs:
       - run:
           name: Build Docker image Worker
           command: |
-            cd v2
             docker build -t $IMAGE_NAME-worker:latest -f v2/Dockerfile-worker .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             IMAGE_TAG=spark2.4.7-hadoop2.7
@@ -57,7 +54,6 @@ jobs:
           name: Build Docker image Base
           command: |
             IMAGE_TAG=spark3.1.2-hadoop3.2
-            cd v3
             docker build -t $IMAGE_NAME-base:$IMAGE_TAG -f v3/Dockerfile-base .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME-base:$IMAGE_TAG
@@ -66,7 +62,6 @@ jobs:
           name: Build Docker image Master
           command: |
             IMAGE_TAG=spark3.1.2-hadoop3.2
-            cd v3
             docker build -t $IMAGE_NAME-master:$IMAGE_TAG -f v3/Dockerfile-master .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME-master:$IMAGE_TAG
@@ -75,7 +70,6 @@ jobs:
           name: Build Docker image Worker
           command: |
             IMAGE_TAG=spark3.1.2-hadoop3.2
-            cd v3
             docker build -t $IMAGE_NAME-worker:$IMAGE_TAG -f v3/Dockerfile-worker .
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME-worker:$IMAGE_TAG
