@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   spark-master:
-    image: jarzamendia/spark-master:staging
+    image: jarzamendia/spark-master:spark3.0.1-hadoop3.2
     restart: always
     ports:
       - "8080:8080"
@@ -18,7 +18,7 @@ services:
   spark-worker:
     hostname: "{{.Node.Hostname}}"
     restart: always
-    image: jarzamendia/spark-worker:staging
+    image: jarzamendia/spark-worker:spark3.0.1-hadoop3.2
     ports:
       - "8081:8081"
     environment:

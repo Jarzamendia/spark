@@ -29,6 +29,3 @@ RUN chmod +x /wait-for-step.sh && chmod +x /execute-step.sh && chmod +x /finish-
 ENV PYTHONHASHSEED 1
 
 ENV PATH="$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin"
-
-ENV SCALA_VERSION=2.12.12 \
-    SCALA_HOME=/opt/scala

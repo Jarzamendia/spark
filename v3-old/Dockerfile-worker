@@ -1,4 +1,4 @@
-FROM jarzamendia/spark-base:v3
+FROM jarzamendia/spark-base:spark3.0.1-hadoop3.2
 
 COPY worker.sh /
 
